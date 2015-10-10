@@ -247,7 +247,7 @@ size_t PKCS5PaddingLength(const std::vector<char> &data) {
 }; // anonymous namespace
 
 Blowfish::Blowfish(const std::vector<char> &key) {
-  SetKey(key.data(), key.size());
+  SetKey(&key.front(), key.size());
 }
 
 void Blowfish::SetKey(const char *key, size_t byte_length) {
@@ -314,8 +314,8 @@ std::vector<char> Blowfish::Encrypt(const std::vector<char> &src) const {
   }
 
   for (int i = 0; i < dst.size() / sizeof(uint64_t); ++i) {
-    uint32_t *left = &reinterpret_cast<uint32_t *>(dst.data())[i * 2];
-    uint32_t *right = &reinterpret_cast<uint32_t *>(dst.data())[i * 2 + 1];
+    uint32_t *left = &reinterpret_cast<uint32_t *>(&dst.front())[i * 2];
+    uint32_t *right = &reinterpret_cast<uint32_t *>(&dst.front())[i * 2 + 1];
     EncryptBlock(left, right);
   }
 
@@ -326,8 +326,8 @@ std::vector<char> Blowfish::Decrypt(const std::vector<char> &src) const {
   std::vector<char> dst = src;
 
   for (int i = 0; i < dst.size() / sizeof(uint64_t); ++i) {
-    uint32_t *left = &reinterpret_cast<uint32_t *>(dst.data())[i * 2];
-    uint32_t *right = &reinterpret_cast<uint32_t *>(dst.data())[i * 2 + 1];
+    uint32_t *left = &reinterpret_cast<uint32_t *>(&dst.front())[i * 2];
+    uint32_t *right = &reinterpret_cast<uint32_t *>(&dst.front())[i * 2 + 1];
     DecryptBlock(left, right);
   }
 
